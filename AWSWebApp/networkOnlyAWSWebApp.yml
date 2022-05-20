@@ -1,3 +1,9 @@
 AWSTemplateFormatVersion: 2022-05-21
 Description: Mohammed Dabo / CloudFormation - This template deploys a network for a AWSWebApp
 
+Parameters:
+ EnvironmentName:
+     Description: An Environment name that will be prefixed to resources
+     Type: String
+
+
