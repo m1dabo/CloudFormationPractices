@@ -1,0 +1,3 @@
+AWSTemplateFormatVersion: 2022-05-21
+Description: Mohammed Dabo / CloudFormation - This template deploys a network for a AWSWebApp
+
