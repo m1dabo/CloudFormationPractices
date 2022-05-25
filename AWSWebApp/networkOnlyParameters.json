@@ -1,7 +1,12 @@
 [
 	{
+		"_comment1": "The first key element in the json file below is the paramater Key for every element in this json",
+		"_comment2": "The seconed key element in the json file below is the parameter Value for every element in this json"
+	},
+	
+	{
 		"ParameterKey": "EnvironmentName",
-		"ParameterValue": "UdacityProject"
+		"ParameterValue": "M1daboUdacityProject"
 	},
 	{
 		"ParameterKey": "VpcCIDR",
