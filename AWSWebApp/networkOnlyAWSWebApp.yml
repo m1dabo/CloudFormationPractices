@@ -3,6 +3,9 @@ Description: Mohammed Dabo's Template of Cloud Formation, this template deploys 
     across two Availabilty Zones. It deploys an Internet Gateway, with a default 
     route on the public subnets. It deploys a pair of NAT Gateways (one in each AZ), 
     and default routes for them in the private subnets.
+    # this is the parameters section.
+    # When using any of the below parameter it will use it, 
+    # from the networkOnlyParameter.json file.
 Parameters:
 
     EnvironmentName:
@@ -36,6 +39,8 @@ Parameters:
 
 Resources:
 
+# I've used !Ref keyword to tell the engine of aws 
+# which is responsible for transforming yml files to take this from the parameters section
     VPC: 
         Type: AWS::EC2::VPC
         Properties:
@@ -44,20 +49,23 @@ Resources:
             Tags: 
                 - Key: Name 
                   Value: !Ref EnvironmentName
-            
+   
     InternetGateway:
         Type: AWS::EC2::InternetGateway
         Properties:
             Tags:
                 - Key: Name
                   Value: !Ref EnvironmentName
-            
+# !Ref to point to the VPC, InternetGateway Elements in this Resources Section            
     InternetGatewayAttachment:
         Type: AWS::EC2::VPCGatewayAttachment
         Properties:
             InternetGatewayId: !Ref InternetGateway
             VpcId: !Ref VPC
-
+# GetAZs built in function in AWS which get all the Availability Zones
+# returns an array that lists Availability Zones for a specified region in alphabetical order.
+# That way you don't have to hard-code a full list of Availability Zones for a specified region.
+# [0] represents the first Zone in the returned Zones from GetAZs function.
     PublicSubnet1: 
         Type: AWS::EC2::Subnet
         Properties:
@@ -68,7 +76,7 @@ Resources:
             Tags: 
                 - Key: Name 
                   Value: !Sub ${EnvironmentName} Public Subnet (AZ1)
-
+# [0] represents the seconed Zone in the returned Zones from GetAZs function.
     PublicSubnet2: 
         Type: AWS::EC2::Subnet
         Properties:
@@ -101,7 +109,9 @@ Resources:
             Tags: 
                 - Key: Name 
                   Value: !Sub ${EnvironmentName} Private Subnet (AZ2)
-
+# Elastic IP is important which sets a static IP to your applications.
+# As if any failure happened in AWS Resoures won't affect the ELastic IP.
+# it waill remains as it is.
     NatGateway1EIP:
         Type: AWS::EC2::EIP
         DependsOn: InternetGatewayAttachment
@@ -113,7 +123,8 @@ Resources:
         DependsOn: InternetGatewayAttachment
         Properties:
             Domain: vpc
-
+# The Fn::GetAtt intrinsic function returns the value of an attribute from a resource in the template.
+# GetAtt return values for a particular resource
     NatGateway1: 
         Type: AWS::EC2::NatGateway
         Properties: 
@@ -125,7 +136,9 @@ Resources:
         Properties:
             AllocationId: !GetAtt NatGateway2EIP.AllocationId
             SubnetId: !Ref PublicSubnet2
-
+# The route tables are very important for your specified VPC.
+# A route table contains a set of rules, called routes, 
+# that determine where network traffic from your subnet or gateway is directed.
     PublicRouteTable:
         Type: AWS::EC2::RouteTable
         Properties: 
@@ -197,6 +210,8 @@ Resources:
             RouteTableId: !Ref PrivateRouteTable2
             SubnetId: !Ref PrivateSubnet2
 
+# We usually use the output section.
+# to make a reusable components of cloudformation elements and resources.
 Outputs: 
 
     VPC: 
@@ -228,7 +243,10 @@ Outputs:
         Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
         Export:
           Name: !Sub ${EnvironmentName}-PUB-NETS
-
+# Fn::Join appends a set of values into a single value, separated by the specified delimiter.
+# If a delimiter is the empty string, the set of values are concatenated with no delimiter.
+# [ ",", [...]] "," is the specified delimiter, [...] represents a list of two elements,
+# the first element is PrivateSubnet1, the seconed is PrivateSubnet2
     PrivateSubnets:
         Description: A list of the private subnets
         Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
