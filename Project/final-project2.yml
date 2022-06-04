@@ -1,8 +1,50 @@
+Description: >
+  Mohammed Dabo / Deploy a High Availability Web App Using CloudFormation (Udagram Project)
+
+  
 Parameters:
   # Paramenters are entirely optional.
   # but using them will make your cloudformation templates more reusable
   # use them for things that may change over time, such as instance type,
   # VPCs and so on.
+  EnvironmentName:
+    Description: An environment name that will be in the first of each resources name
+    Type: String
+
+  VpcCiDR:
+    Description: IP range [CiDR notation] for this
+    Type: String
+    Default: 10.0.0.0/16
+
+  PublicSubnetCiDR1:
+    Description: IP range [CiDR notation] for the PublicSubnet1
+    Type: String
+    Default: 10.0.0.0/24
+
+  PublicSubnetCiDR2:
+    Description: IP range [CiDR notation] for the PublicSubnet2
+    Type: String
+    Default: 10.0.1.0/24
+
+  PrivateSubnetCiDR1:
+    Description: IP range [CiDR notation] for the PrivateSubnet1
+    Type: String
+    Default: 10.0.2.0/24
+
+  PrivateSubnetCiDR2:
+    Description: IP range [CiDR notation] for the PrivateSubnet2
+    Type: String
+    Default: 10.0.3.0/24
+
+  WebAppServersMinimumSize:
+    Description: Web Application Servers Minimum Number
+    Type: String
+    Default: "2"
+
+  WebAppServersMaximumSize:
+    Description: Web Application Servers Maximum Number
+    Type: String
+    Default: "4"
 Resources:
   # instace profile contains the IAM Role name(s) that we want to associate to our auto scaling EC2 Servers
   # never give too much permissions to your EC2 instances! if they get hacked, the permissions get hacked also!
