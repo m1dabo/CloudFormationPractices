@@ -1,6 +1,34 @@
 [
 	{
 		"ParameterKey": "EnvironmentName",
-		"ParameterValue": "UdacityProject"
-	}
+		"ParameterValue": "M1daboUdacityProject2"
+	},
+    {
+        "ParameterKey": "VpcCiDR",
+        "ParameterValue": "10.0.0.0/16"
+    },
+    {
+        "ParameterKey": "PublicSubnetCiDR1",
+        "ParameterValue": "10.0.0.0/24"
+    },
+    {
+        "ParameterKey": "PublicSubnetCiDR2",
+        "ParameterValue": "10.0.1.0/24"
+    },
+	{
+        "ParameterKey": "PrivateSubnetCiDR1",
+        "ParameterValue": "10.0.2.0/24"
+    },
+    {
+        "ParameterKey": "PrivateSubnetCiDR2",
+        "ParameterValue": "10.0.3.0/24"
+    },
+    {
+        "ParameterKey": "WebAppServersMinimumSize",
+        "ParameterValue": "2"
+    },
+    {
+        "ParameterKey": "WebAppServersMaximumSize",
+        "ParameterValue": "4"
+    }
 ]
