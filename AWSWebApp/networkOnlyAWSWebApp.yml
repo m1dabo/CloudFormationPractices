@@ -1,3 +1,4 @@
+# only networking
 AWSTemplateFormatVersion: 2022-05-21
 Description: Mohammed Dabo's Template of Cloud Formation, this template deploys a VPC, with a pair of public and private subnets spread 
     across two Availabilty Zones. It deploys an Internet Gateway, with a default 
