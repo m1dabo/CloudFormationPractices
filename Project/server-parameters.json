@@ -30,5 +30,10 @@
 	{
 		"ParameterKey": "WebAppServersMaximumSize",
 		"ParameterValue": "4"
+	},
+	{
+		"ParameterKey":"myLaunchTemplateVN",
+		"ParameterValue":"1"
 	}
+
 ]
