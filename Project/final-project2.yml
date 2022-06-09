@@ -43,6 +43,12 @@ Parameters:
     Description: Web Application Servers Maximum Number
     Type: String
     Default: "4"
+  
+  myLaunchTemplateVN:
+    Description: my launch template version numvber
+    Type: String
+    Default: "1"
+
 Resources:
   # instace profile contains the IAM Role name(s) that we want to associate to our auto scaling EC2 Servers
   # never give too much permissions to your EC2 instances! if they get hacked, the permissions get hacked also!
@@ -313,7 +319,8 @@ Resources:
           cd /var/www/html
           aws s3 cp s3://my-220324843743-s3-bucket/M1dabo.zip .
           unzip -o M1dabo.zip
-      ImageId: ami-006a0174c6c25ac06
+      ImageId: ami-047a51fa27710816e
+      KeyName: m1daboKey1
       IamInstanceProfile: !Ref ProfileWithRolesForM1daboUdacityProject2App
       SecurityGroups:
         - Ref: WebServerSecurityGroup
@@ -322,6 +329,34 @@ Resources:
         - DeviceName: "/dev/sdk"
           Ebs:
             VolumeSize: "10"
+# or we could use this but I'll comment it
+# LaunchTemplate is the the same like LaunchConfiguration
+# the difference is after properties we should write LaunchTemplateData:
+
+
+#  WebApplicationLaunchTemplate:
+#  Type: AWS::EC2::LaunchTemplate
+#  Properties: 
+#    LaunchTemplateData:
+#      UserData:
+#        Fn::Base64: !Sub |
+#          #!/bin/bash
+#          apt-get update -y
+#          apt-get install unzip awscli -y
+#          apt-get install apache2 -y
+#          systemctl start apache2.service
+#          cd /var/www/html
+#          aws s3 cp s3://my-220324843743-s3-bucket/M1dabo.zip .
+#          unzip -o M1dabo.zip
+#      ImageId: ami-047a51fa27710816e
+#      KeyName: m1daboKey1
+#      SecurityGroupIds:
+#        - Ref: WebServerSecurityGroup
+#      InstanceType: t3.small
+#      BlockDeviceMappings:
+#      - DeviceName: "/dev/sdk"
+#        Ebs:
+#          VolumeSize: '10'
 
   WebApplicationTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -336,7 +371,7 @@ Resources:
       UnhealthyThresholdCount: 5
       VpcId: !Ref VPC
 
-  WebApplicationGroup:
+  WebApplicationASGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       VPCZoneIdentifier:
@@ -348,6 +383,24 @@ Resources:
       MaxSize: !Ref WebApplicationServersMaximumSize
       TargetGroupARNs:
         - Ref: WebApplicationTargetGroup
+
+# the replacable code for my autoscaling group is 
+# this is applicable if i used the launch template instead of Launch configuration
+# I've used here a !sub as if i've used a stack before for network only and I'm using from it my environment name as a parameter 
+
+#  WebApplicationGroup:
+#  Type: AWS::AutoScaling::AutoScalingGroup
+#  Properties:
+#    VPCZoneIdentifier:
+#    - Fn::ImportValue: 
+#        !Sub "${EnvironmentName}-PRIV-NETS"
+#    LaunchTemplate:
+#      LaunchTemplateId: !Ref WebApplicationLaunchTemplate
+#      Version: !Ref myLaunchTemplateVN
+#    MinSize: '3'
+#    MaxSize: '5'
+#    TargetGroupARNs:
+#    - Ref: WebAppTargetGroup
 
   WebApplicationLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
