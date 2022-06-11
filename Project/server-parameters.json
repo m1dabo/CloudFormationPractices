@@ -24,11 +24,11 @@
 		"ParameterValue": "10.0.3.0/24"
 	},
 	{
-		"ParameterKey": "WebAppServersMinimumSize",
+		"ParameterKey": "WebApplicationServersMinimumSize",
 		"ParameterValue": "2"
 	},
 	{
-		"ParameterKey": "WebAppServersMaximumSize",
+		"ParameterKey": "WebApplicationServersMaximumSize",
 		"ParameterValue": "4"
 	},
 	{
