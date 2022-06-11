@@ -1,5 +1,12 @@
+# I will name the stack "M1daboUdacityProject2"
 Description: >
   Mohammed Dabo / Deploy a High Availability Web App Using CloudFormation (Udagram Project)
+  this High availability web app deploys a VPC, with a pair of public and private subnets spread across 
+  two Availabilty Zones. It deploys an Internet Gateway, and route tables .
+  It deploys a pair of NAT Gateways (one in each AZ), and default routes for them in the private subnets.
+  It deploys two EC2 instances in the private subnets.
+  It deploys a load balancer.
+  It deploys an auto scaling group in the private subnets on the instances to make them be bigger horizontally.
 Parameters:
   # Paramenters are entirely optional.
   # but using them will make your cloudformation templates more reusable
@@ -217,14 +224,15 @@ Resources:
     Properties:
       RoleName: !Sub ${EnvironmentName}-Role
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
+          Version: "2012-10-17"
+          Statement:
+          -
+            Effect: Allow
             Principal:
-              Service:
-                - ec2.amazonaws.com
+              - Service:
+                  ec2.amazonaws.com
             Action:
-              - sts:AssumeRole
+                sts:AssumeRole
       Path: "/"
 
   RolePolicy:
