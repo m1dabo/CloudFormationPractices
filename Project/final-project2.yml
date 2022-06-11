@@ -66,8 +66,8 @@ Resources:
       CidrBlock: !Ref VpcCiDR
       EnableDnsHostnames: true
       Tags:
-        - Key: Name
-          Value: !Ref EnvironmentName
+      - Key: Name
+        Value: !Ref EnvironmentName
 
   PublicSubnet1:
     Type: AWS::EC2::Subnet
@@ -77,8 +77,8 @@ Resources:
       CidrBlock: !Ref PublicSubnetCiDR1
       MapPublicIpOnLaunch: false
       Tags:
-        - Key: Name
-          Value: !Sub ${EnvironmentName} Public Subnet (Avaialabilty Zone 1)
+      - Key: Name
+        Value: !Sub ${EnvironmentName} Public Subnet (Avaialabilty Zone 1)
 
   PublicSubnet2:
     Type: AWS::EC2::Subnet
@@ -88,8 +88,8 @@ Resources:
       CidrBlock: !Ref PublicSubnetCiDR2
       MapPublicIpOnLaunch: false
       Tags:
-        - Key: Name
-          Value: !Sub ${EnvironmentName} Public Subnet (Avaialabilty Zone 2)
+      - Key: Name
+        Value: !Sub ${EnvironmentName} Public Subnet (Avaialabilty Zone 2)
 
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
@@ -99,8 +99,8 @@ Resources:
       CidrBlock: !Ref PrivateSubnetCiDR1
       MapPublicIpOnLaunch: false
       Tags:
-        - Key: Name
-          Value: !Sub ${EnvironmentName} Private Subnet (Avaialabilty Zone 1)
+      - Key: Name
+        Value: !Sub ${EnvironmentName} Private Subnet (Avaialabilty Zone 1)
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
@@ -110,14 +110,15 @@ Resources:
       CidrBlock: !Ref PrivateSubnetCiDR2
       MapPublicIpOnLaunch: false
       Tags:
-        - Key: Name
-          Value: !Sub ${EnvironmentName} Private Subnet (Avaialabilty Zone 2)
+      - Key: Name
+        Value: !Sub ${EnvironmentName} Private Subnet (Avaialabilty Zone 2)
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
-    Tags:
-        - Key: Name
-          Value: !Sub ${EnvironmentName} Internet Gateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: !Sub ${EnvironmentName} Internet Gateway
 
   InternetGatewayAttachments:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -154,8 +155,8 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       Tags:
-        - Key: Name
-          Value: !Sub ${EnvironmentName} Public Routes
+      - Key: Name
+        Value: !Sub ${EnvironmentName} Public Routes
 
   DefaultPublicRoute:
     Type: AWS::EC2::Route
@@ -182,8 +183,8 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       Tags:
-        - Key: Name
-          Value: !Sub ${EnvironmentName} Private Routes (Avaialabilty Zone 1)
+      - Key: Name
+        Value: !Sub ${EnvironmentName} Private Routes (Avaialabilty Zone 1)
 
   DefaultPrivateRoute1:
     Type: AWS::EC2::Route
@@ -203,8 +204,8 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       Tags:
-        - Key: Name
-          Value: !Sub ${EnvironmentName} Private Routes (Avaialabilty Zone 2)
+      - Key: Name
+        Value: !Sub ${EnvironmentName} Private Routes (Avaialabilty Zone 2)
 
   DefaultPrivateRoute2:
     Type: AWS::EC2::Route
@@ -224,15 +225,14 @@ Resources:
     Properties:
       RoleName: !Sub ${EnvironmentName}-Role
       AssumeRolePolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-          -
-            Effect: Allow
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
             Principal:
-              - Service:
-                  ec2.amazonaws.com
+              Service:
+                - "ec2.amazonaws.com"
             Action:
-                sts:AssumeRole
+              - "sts:AssumeRole"
       Path: "/"
 
   RolePolicy:
@@ -250,14 +250,14 @@ Resources:
               - arn:aws:s3:::my-220324843743-s3-bucket
               - arn:aws:s3:::my-220324843743-s3-bucket/*
       Roles:
-        - Ref: M1daboS3ReadOnlyEC2Instance
+        - Ref: "M1daboS3ReadOnlyEC2Instance"
 
-    ProfileWithRolesForM1daboUdacityProject2App:
+  ProfileWithRolesForM1daboUdacityProject2App:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: "/"
       Roles:
-        - Ref: M1daboS3ReadOnlyEC2Instance
+        - Ref: "M1daboS3ReadOnlyEC2Instance"
 
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -314,6 +314,8 @@ Resources:
 #          echo "Udacity Demo Web Server Up and Running!" > index.html
 
 # Volume Size will be 10 GB to avoid getting in issues like the project guidlines.
+# check your work against the rubric here before submitting!
+# SSH Key: There shouldn’t be a ‘keyname’ property in the launch config, so i commented it.
   WebApplicationLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
@@ -325,10 +327,10 @@ Resources:
           apt-get install apache2 -y
           systemctl start apache2.service
           cd /var/www/html
-          aws s3 cp s3://my-220324843743-s3-bucket/M1dabo.zip .
+          aws s3 cp s3://my-220324843743-s3-bucket/M1dabo.zip
           unzip -o M1dabo.zip
       ImageId: ami-047a51fa27710816e
-      KeyName: m1daboKey1
+      # KeyName: m1daboKey1
       IamInstanceProfile: !Ref ProfileWithRolesForM1daboUdacityProject2App
       SecurityGroups:
         - Ref: WebServerSecurityGroup
