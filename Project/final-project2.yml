@@ -366,7 +366,7 @@ Resources:
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 8
       HealthyThresholdCount: 2
-      Port: 80
+      Port: 8080
       Protocol: HTTP
       UnhealthyThresholdCount: 5
       VpcId: !Ref VPC
