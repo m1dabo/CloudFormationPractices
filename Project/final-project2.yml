@@ -230,9 +230,9 @@ Resources:
           - Effect: "Allow"
             Principal:
               Service:
-                - "ec2.amazonaws.com"
+              - "ec2.amazonaws.com"
             Action:
-              - "sts:AssumeRole"
+            - "sts:AssumeRole"
       Path: "/"
 
   RolePolicy:
@@ -250,14 +250,14 @@ Resources:
               - arn:aws:s3:::my-220324843743-s3-bucket
               - arn:aws:s3:::my-220324843743-s3-bucket/*
       Roles:
-        - Ref: "M1daboS3ReadOnlyEC2Instance"
+      - Ref: "M1daboS3ReadOnlyEC2Instance"
 
   ProfileWithRolesForM1daboUdacityProject2App:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: "/"
       Roles:
-        - Ref: "M1daboS3ReadOnlyEC2Instance"
+      - Ref: "M1daboS3ReadOnlyEC2Instance"
 
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -333,12 +333,12 @@ Resources:
       # KeyName: m1daboKey1
       IamInstanceProfile: !Ref ProfileWithRolesForM1daboUdacityProject2App
       SecurityGroups:
-        - Ref: WebServerSecurityGroup
+      - Ref: WebServerSecurityGroup
       InstanceType: t3.small
       BlockDeviceMappings:
-        - DeviceName: "/dev/sdk"
-          Ebs:
-            VolumeSize: "10"
+      - DeviceName: "/dev/sdk"
+        Ebs:
+          VolumeSize: "10"
 # or we could use this but I'll comment it
 # LaunchTemplate is the the same like LaunchConfiguration
 # the difference is after properties we should write LaunchTemplateData:
